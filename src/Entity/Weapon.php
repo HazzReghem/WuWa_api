@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\WeaponRepository;
+use App\Entity\Stat;
+use App\Enum\Rarity;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,9 +20,6 @@ class Weapon
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $type = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
@@ -32,8 +32,12 @@ class Weapon
     #[ORM\Column(type: Types::TEXT)]
     private ?string $baseWeaponSkill = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $rarity = null;
+    #[ORM\Column(type: 'integer', enumType: Rarity::class)]
+    private Rarity $rarity;
+
+    #[ORM\ManyToOne(inversedBy: 'typeName')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?WeaponType $weaponType = null;
 
     public function getId(): ?int
     {
@@ -48,18 +52,6 @@ class Weapon
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): static
-    {
-        $this->type = $type;
 
         return $this;
     }
@@ -112,14 +104,26 @@ class Weapon
         return $this;
     }
 
-    public function getRarity(): ?string
+    public function getRarity(): ?Rarity
     {
         return $this->rarity;
     }
 
-    public function setRarity(string $rarity): static
+    public function setRarity(Rarity $rarity): static
     {
         $this->rarity = $rarity;
+
+        return $this;
+    }
+
+    public function getWeaponType(): ?WeaponType
+    {
+        return $this->weaponType;
+    }
+
+    public function setWeaponType(?WeaponType $weaponType): static
+    {
+        $this->weaponType = $weaponType;
 
         return $this;
     }

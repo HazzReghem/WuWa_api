@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ResonatorRepository;
+use App\Entity\Forte;
+use App\Enum\Rarity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -26,8 +29,8 @@ class Resonator
     #[ORM\Column(length: 100)]
     private ?string $weaponType = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $rarity = null;
+    #[ORM\Column(type: 'integer', enumType: Rarity::class)]
+    private Rarity $rarity;
 
     #[ORM\Column(length: 50)]
     private ?string $affiliation = null;
@@ -96,12 +99,12 @@ class Resonator
         return $this;
     }
 
-    public function getRarity(): ?string
+    public function getRarity(): ?Rarity
     {
         return $this->rarity;
     }
 
-    public function setRarity(string $rarity): static
+    public function setRarity(Rarity $rarity): static
     {
         $this->rarity = $rarity;
 
